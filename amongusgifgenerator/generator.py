@@ -88,17 +88,17 @@ def make_square(image):
     new_image.paste(image, (int((size-image.size[0])/2), int((size-image.size[1])/2)), image)
     return new_image
 
-def generate_ejection_message(color=None, skn='rand', person='David', imposter='rand', name=None, path='scratch/gifs/'):
-    if imposter == 'rand':
-        imposter_options = [False, True, None]
-        imposter = imposter_options[random.randrange(0, len(imposter_options))]
+def generate_ejection_message(color=None, skn='rand', person='David', impostor='rand', name=None, path='scratch/gifs/'):
+    if impostor == 'rand':
+        impostor_options = [False, True, None]
+        impostor = impostor_options[random.randrange(0, len(impostor_options))]
     text = person + ' was '
-    if imposter == None:
+    if impostor == None:
         text += 'ejected.'
-    elif imposter == False:
-        text += 'not An Imposter.'
+    elif impostor == False:
+        text += 'not An Impostor.'
     else:
-        text += 'An Imposter.'
+        text += 'An Impostor.'
     if not color:
         color=all_colors[random.randrange(0, len(all_colors))]
     if skn == 'rand':
@@ -144,5 +144,3 @@ def generate_ejection_message(color=None, skn='rand', person='David', imposter='
     if not os.path.exists(path):
         os.makedirs(path)
     eject_gif[0].save(os.path.join(path,name+'.gif'), save_all=True, append_images=eject_gif[1:], duration=40, loop=0)
-
-generate_ejection_message()
