@@ -11,7 +11,7 @@ class ReplaceColors:
         'purple': (107, 47, 188),
         'brown': (113, 73, 30),
         'cyan': (56, 255, 221),
-        'line': (80, 240, 57)
+        'lime': (80, 240, 57)
     }
 
     blue_replace_color = {
@@ -26,7 +26,7 @@ class ReplaceColors:
         'purple': (59, 23, 124),
         'brown': (94, 38, 21),
         'cyan': (36, 169, 191),
-        'line': (21, 168, 66)
+        'lime': (21, 168, 66)
     }
 
     def __init__(self, color='blue'):

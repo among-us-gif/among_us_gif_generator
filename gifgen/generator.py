@@ -5,13 +5,25 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
-from amongusgifgenerator.sprites import ReplaceColors, Skins
+from gifgen.sprites import ReplaceColors, Skins
 
-all_colors= ['red','blue','green','pink','orange','yellow','grey','white','purple','brown','cyan','line']
+ASSET_PATH = os.path.join(os.path.abspath(__file__), os.pardir, 'assets')
+
+all_colors= ['red','blue','green','pink','orange','yellow','grey','white','purple','brown','cyan','lime']
 all_skins= ['archae','astro','capt','hazmat','mech','military','miner','police','secguard','science','blacksuit','whitesuit','tarmac','wall','winter',None]
 
 def generate_base(image="idle.png", color='blue'):
-    body = Image.open(os.path.join("assets", "Sprite", image))
+    """
+    Generates a base image for an Among Us Asset that needs color replacement.
+    The default image is the standing crewmate (idle) and the default color is blue.
+
+    :param image: The image to load up
+    :type image: str
+    :param color: The color to make the base image, must be one of red, blue, green, 
+                  pink, orange, yellow, grey, white, purple, brown, cyan, or lime'
+    :type color: str
+    """
+    body = Image.open(os.path.join(ASSET_PATH, image))
     return color_replace(image=body, color=ReplaceColors(color=color))
 
 def color_replace(image=None, color=None):
@@ -54,33 +66,39 @@ def apply_layer(base_image, layer_image, layer_origin, base_origin=(0, 0)):
     new_image.paste(layer_image, new_layer_origin, layer_image)
     return new_image, base_origin
 
-def crop_and_save(image, name, type='PNG'):
-    if not os.path.exists('scratch'):
-        os.makedirs('scratch')
+def crop_and_save(image, name, path='scratch', type='PNG'):
+    if not os.path.exists(path):
+        os.makedirs(path)
     img = image.copy()
     img = img.crop(img.getbbox())
-    img.save(os.path.join('scratch',name), 'PNG')
+    img.save(os.path.join(path,name), 'PNG')
 
-def generate_all_images():
+def generate_crewmate(color='blue', skn=None, ejected=True):
+    skin = Skins(skin=skn) if skn else None
+    if ejected:
+        body = generate_base(image='ejected.png', color=color)
+        body_origin = (0, 0)
+        if skin:
+            skin_im = Image.open(os.path.join(ASSET_PATH, skin.eject))
+            body, body_origin = apply_layer(body, skin_im, skin.eject_offset)
+    else:
+        body = generate_base(image='idle.png', color=color)
+        body_origin = (0, 0)
+        if skin:
+            skin_im = Image.open(os.path.join(ASSET_PATH, skin.idle))
+            body, body_origin = apply_layer(body, skin_im, skin.idle_offset)
+    return body, body_origin
+
+def generate_all_images(path='scratch'):
     for color in all_colors:
-        idle = generate_base(image='idle.png', color=color)
-        crop_and_save(idle, color+'_idle.png','PNG')
-        ejected = generate_base(image='ejected.png', color=color)
-        crop_and_save(ejected, color+'_ejected.png','PNG')
-        crop_and_save(generate_base(image='Dead0001.png', color=color), color+'_dead.png','PNG')
-        crop_and_save(generate_base(image='Dead0040.png', color=color), color+'_dead_floor.png','PNG')
-        for skin in all_skins[:-1]:
-            idle_body = idle.copy()
-            idle_body_origin = (0, 0)
-            ejected_body = ejected.copy()
-            ejected_body_origin = (0, 0)
-            skin_details = Skins(skin=skin)
-            idle_skin = Image.open(os.path.join("assets", "Sprite", skin_details.idle))
-            eject_skin = Image.open(os.path.join("assets", "Sprite", skin_details.eject))
-            idle_body, idle_body_origin = apply_layer(idle_body, idle_skin, skin_details.idle_offset, idle_body_origin)
-            crop_and_save(idle_body, color+'_'+skin+'_idle.png', 'PNG')
-            ejected_body, ejected_body_origin = apply_layer(ejected_body, eject_skin, skin_details.eject_offset, ejected_body_origin)
-            crop_and_save(ejected_body, color+'_'+skin+'_ejected.png', 'PNG')
+        crop_and_save(generate_base(image='Dead0001.png', color=color), color+'_dead.png', path=path, type='PNG')
+        crop_and_save(generate_base(image='Dead0040.png', color=color), color+'_dead_floor.png', path=path, type='PNG')
+        crop_and_save(generate_base(image='ghostbob0001.png', color=color), color+'_ghostbob0001.png', path=path, type='PNG')
+        for skin in all_skins:
+            ejected_body, body_origin = generate_crewmate(color=color, skn=skin, ejected=True)
+            crop_and_save(ejected_body, color+'_'+skin+'_ejected.png', path=path, type='PNG')
+            idle_body, body_origin = generate_crewmate(color=color, skn=skin, ejected=True)
+            crop_and_save(idle_body, color+'_'+skin+'_idle.png', path=path, type='PNG')
 
 def make_square(image):
     size = max(image.size)
@@ -88,7 +106,7 @@ def make_square(image):
     new_image.paste(image, (int((size-image.size[0])/2), int((size-image.size[1])/2)), image)
     return new_image
 
-def generate_ejection_message(color=None, skn='rand', person='David', impostor='rand', name=None, path='scratch/gifs/'):
+def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand', name=None, path='scratch/gifs/'):
     if impostor == 'rand':
         impostor_options = [False, True, None]
         impostor = impostor_options[random.randrange(0, len(impostor_options))]
@@ -109,15 +127,10 @@ def generate_ejection_message(color=None, skn='rand', person='David', impostor='
         encoded = json.dumps(pattern, sort_keys=True).encode()
         hasher.update(encoded)
         name = hasher.hexdigest()[:8]
-    body = generate_base(image='ejected.png', color=color)
-    if skn is not None:
-        skin_details = Skins(skin=skn)
-        skin = Image.open(os.path.join('assets', 'Sprite', skin_details.eject))
-        body = apply_layer(body, skin, skin_details.eject_offset, (0, 0))
-        body = body[0]
+    body, body_origin = generate_crewmate(color=color, skn=skn, ejected=True)
     body = make_square(body)
 
-    font = ImageFont.truetype(os.path.join('assets', 'fonts', 'arial.ttf'), 30)
+    font = ImageFont.truetype(os.path.join(ASSET_PATH, 'arial.ttf'), 30)
     text_background = Image.new('RGBA', (1200, 64), (0, 0, 0, 0))
     ImageDraw.Draw(text_background).text((0, 0), text, font=font, fill=(255, 255, 255, 255))
     text_img = text_background.crop(text_background.getbbox())
