@@ -7,7 +7,7 @@ import numpy as np
 
 from gifgen.sprites import ReplaceColors, Skins
 
-ASSET_PATH = os.path.join(os.path.abspath(__file__), os.pardir, 'assets')
+ASSET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 
 all_colors= ['red','blue','green','pink','orange','yellow','grey','white','purple','brown','cyan','lime']
 all_skins= ['archae','astro','capt','hazmat','mech','military','miner','police','secguard','science','blacksuit','whitesuit','tarmac','wall','winter',None]
@@ -126,7 +126,9 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
         pattern = {'color': color, 'skin': skn, 'hat': None, 'text': text}
         encoded = json.dumps(pattern, sort_keys=True).encode()
         hasher.update(encoded)
-        name = hasher.hexdigest()[:8]
+        name = hasher.hexdigest()[:16]
+    if os.path.exists(os.path.join(path, name+'.gif')):
+        return name+'.gif'
     body, body_origin = generate_crewmate(color=color, skn=skn, ejected=True)
     body = make_square(body)
 
@@ -157,3 +159,4 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
     if not os.path.exists(path):
         os.makedirs(path)
     eject_gif[0].save(os.path.join(path,name+'.gif'), save_all=True, append_images=eject_gif[1:], duration=40, loop=0)
+    return name+'.gif'
