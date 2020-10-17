@@ -20,7 +20,7 @@ def generate_base(image="idle.png", color='blue'):
     :param image: The image to load up
     :type image: str
     :param color: The color to make the base image, must be one of red, blue, green, 
-                  pink, orange, yellow, grey, white, purple, brown, cyan, or lime'
+                  pink, orange, yellow, grey, white, purple, brown, cyan, or lime
     :type color: str
     """
     body = Image.open(os.path.join(ASSET_PATH, image))
