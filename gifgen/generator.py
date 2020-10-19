@@ -139,10 +139,12 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
         skn=all_skins[random.randrange(0, len(all_skins))]
     if not name:
         hasher = hashlib.md5()
-        pattern = {'color': color, 'skin': skn, 'hat': None, 'text': text}
+        pattern = {'color': color, 'skin': skn, 'hat': None, 'text': text, 'stars': True}
         encoded = json.dumps(pattern, sort_keys=True).encode()
         hasher.update(encoded)
         name = hasher.hexdigest()[:16]
+    if os.path.exists(os.path.join(path, name+'.gif')):
+        return name+'.gif'
     body, body_origin = generate_crewmate(color=color, skn=skn, ejected=True)
     body = make_square(body)
 
