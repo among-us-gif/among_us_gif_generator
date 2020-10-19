@@ -106,6 +106,22 @@ def make_square(image):
     new_image.paste(image, (int((size-image.size[0])/2), int((size-image.size[1])/2)), image)
     return new_image
 
+def generate_stars(width=2000):
+    base = Image.new('RGBA', (width, 588), (0, 0, 0, 0))
+    stars = Image.open(os.path.join(ASSET_PATH, 'Stars.png'))
+    stars = stars.rotate(90)
+    stars2 = stars.copy().rotate(180)
+    for x in range(-800, width, 320):
+        base.paste(stars2, (x, int(x/60)-200), stars2)
+        base.paste(stars, (x, 100+int(x/120)), stars)
+        base.paste(stars2, (x, 300-int(x/60)), stars2)
+        base.paste(stars, (x, 500+int(x/120)), stars)
+        base.paste(stars, (x+160+int(x/80), int(x/100)-100), stars)
+        base.paste(stars2, (x+160-int(x/80), 100+int(x/120)), stars2)
+        base.paste(stars, (x+160+int(x/80), 300-int(x/100)), stars)
+        base.paste(stars2, (x+160-int(x/80), 500-int(x/100)), stars2)
+    return base
+
 def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand', name=None, path='scratch/gifs/'):
     if impostor == 'rand':
         impostor_options = [False, True, None]
@@ -127,8 +143,6 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
         encoded = json.dumps(pattern, sort_keys=True).encode()
         hasher.update(encoded)
         name = hasher.hexdigest()[:16]
-    if os.path.exists(os.path.join(path, name+'.gif')):
-        return name+'.gif'
     body, body_origin = generate_crewmate(color=color, skn=skn, ejected=True)
     body = make_square(body)
 
@@ -140,8 +154,13 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
 
     eject_gif = []
     background = Image.new('RGBA', (max(text_img.size[0]+100, 600), 300), (0, 0, 0, 255))
-    for body_x in range(-100, background.size[0]*3, 12):
+    stars = generate_stars(background.size[0]*3)
+    stars1 = stars.resize((int(stars.size[0]*3), int(stars.size[1]*3)), Image.ANTIALIAS)
+    stars2 = stars1.copy()
+    for body_x in range(-120, background.size[0]*3, 12):
         image = background.copy()
+        image.paste(stars1, (int(-background.size[0]+body_x/8)-200, int(-500-body_x/12)), stars1)
+        image.paste(stars2, (int(-background.size[0]+body_x/3)-100, -200), stars2)
         txt = text_img.copy()
         if body_x > int(background.size[0]/2) and body_x <= int(3*background.size[0]/2):
             mid_x = int(background.size[0]/2)
