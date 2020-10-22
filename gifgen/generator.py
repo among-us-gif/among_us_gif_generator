@@ -137,9 +137,12 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
         color=all_colors[random.randrange(0, len(all_colors))]
     if skn == 'rand':
         skn=all_skins[random.randrange(0, len(all_skins))]
+    return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=True, path=path, name=name)
+
+def generate_ejection_gif(color, skn, hat, text, add_stars=True, path='scratch/gifs/', name=None):
     if not name:
         hasher = hashlib.md5()
-        pattern = {'color': color, 'skin': skn, 'hat': None, 'text': text, 'stars': True}
+        pattern = {'color': color, 'skin': skn, 'hat': hat, 'text': text, 'stars': add_stars}
         encoded = json.dumps(pattern, sort_keys=True).encode()
         hasher.update(encoded)
         name = hasher.hexdigest()[:16]
@@ -156,13 +159,16 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
 
     eject_gif = []
     background = Image.new('RGBA', (max(text_img.size[0]+100, 600), 300), (0, 0, 0, 255))
-    stars = generate_stars(background.size[0]*3)
-    stars1 = stars.resize((int(stars.size[0]*3), int(stars.size[1]*3)), Image.ANTIALIAS)
-    stars2 = stars1.copy()
+    if add_stars:
+        stars = generate_stars(background.size[0]*3)
+        stars1 = stars.resize((int(stars.size[0]*3), int(stars.size[1]*3)), Image.ANTIALIAS)
+        stars2 = stars1.copy()
+        background.paste(stars1, (-background.size[0]-100, -200), stars1)
     for body_x in range(-120, background.size[0]*3, 12):
         image = background.copy()
-        image.paste(stars1, (int(-background.size[0]+body_x/8)-200, int(-500-body_x/12)), stars1)
-        image.paste(stars2, (int(-background.size[0]+body_x/3)-100, -200), stars2)
+        if add_stars:
+            image.paste(stars1, (int(-background.size[0]+body_x/18)-200, -800), stars1)
+            image.paste(stars2, (int(-background.size[0]+body_x/6)-100, -425), stars2)
         txt = text_img.copy()
         if body_x > int(background.size[0]/2) and body_x <= int(3*background.size[0]/2):
             mid_x = int(background.size[0]/2)
