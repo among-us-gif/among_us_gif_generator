@@ -94,7 +94,7 @@ def generate_all_images(path='scratch'):
         crop_and_save(generate_base(image='Dead0001.png', color=color), color+'_dead.png', path=path, type='PNG')
         crop_and_save(generate_base(image='Dead0040.png', color=color), color+'_dead_floor.png', path=path, type='PNG')
         crop_and_save(generate_base(image='ghostbob0001.png', color=color), color+'_ghostbob0001.png', path=path, type='PNG')
-        for skin in all_skins:
+        for skin in all_skins[:-1]:
             ejected_body, body_origin = generate_crewmate(color=color, skn=skin, ejected=True)
             crop_and_save(ejected_body, color+'_'+skin+'_ejected.png', path=path, type='PNG')
             idle_body, body_origin = generate_crewmate(color=color, skn=skin, ejected=True)
