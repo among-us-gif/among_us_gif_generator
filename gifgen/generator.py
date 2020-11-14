@@ -133,13 +133,17 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
         text += 'not An Impostor.'
     else:
         text += 'An Impostor.'
+    return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=1, path=path, name=name)
+
+def generate_ejection_custom_message(color=None, skn='rand', text="I have been ejected.", path='scratch/gifs/'):
+    return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=1, path=path, name=None)
+
+
+def generate_ejection_gif(color='blue', skn='rand', hat=None, text="I have been ejected.", add_stars=True, path='scratch/gifs/', name=None):
     if not color:
         color=all_colors[random.randrange(0, len(all_colors))]
     if skn == 'rand':
         skn=all_skins[random.randrange(0, len(all_skins))]
-    return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=True, path=path, name=name)
-
-def generate_ejection_gif(color, skn, hat, text, add_stars=True, path='scratch/gifs/', name=None):
     if not name:
         hasher = hashlib.md5()
         pattern = {'color': color, 'skin': skn, 'hat': hat, 'text': text, 'stars': add_stars}
