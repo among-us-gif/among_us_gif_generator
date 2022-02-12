@@ -6,7 +6,7 @@ from gifgen import generator
 
 def main():
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawTextHelpFormatter
+        formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
         "--message",

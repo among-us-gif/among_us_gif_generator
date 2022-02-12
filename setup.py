@@ -12,8 +12,8 @@ setup(
     packages=find_packages(exclude=('tests*', 'testing*')),
     entry_points={
         'console_scripts': [
-            'amongusgif = gifgen.main:main'
-        ]
+            'amongusgif = gifgen.main:main',
+        ],
     },
     classifiers=[
         'Programming Language :: Python :: 3',
@@ -29,5 +29,5 @@ setup(
     install_requires=[
         'Pillow>=7.0.0',
         'numpy',
-    ]
+    ],
 )

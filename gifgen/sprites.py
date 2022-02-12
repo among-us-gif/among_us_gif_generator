@@ -63,7 +63,7 @@ class Skins:
         'whitesuit': 'suitW-main.png',
         'tarmac': 'tarmac-idle.png',
         'wall': 'wall-main.png',
-        'winter': 'winter-idle.png'
+        'winter': 'winter-idle.png',
     }
 
     skin_eject = {
@@ -81,7 +81,7 @@ class Skins:
         'whitesuit': 'suitW-eject.png',
         'tarmac': 'tarmac-eject.png',
         'wall': 'wall-eject.png',
-        'winter': 'winter-eject.png'
+        'winter': 'winter-eject.png',
     }
 
     idle_offset = {
@@ -99,7 +99,7 @@ class Skins:
         'whitesuit': (14, 44),
         'tarmac': (14, 40),
         'wall': (10, 44),
-        'winter': (9, 35)
+        'winter': (9, 35),
     }
 
     eject_offset = {
@@ -117,7 +117,7 @@ class Skins:
         'whitesuit': (11, 35),
         'tarmac': (14, 37),
         'wall': (12, 35),
-        'winter': (5, 30)
+        'winter': (5, 30),
     }
 
     def __init__(self, skin='capt'):
