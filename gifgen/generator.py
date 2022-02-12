@@ -9,8 +9,8 @@ from gifgen.sprites import ReplaceColors, Skins
 
 ASSET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 
-all_colors= ['red','blue','green','pink','orange','yellow','grey','white','purple','brown','cyan','lime']
-all_skins= ['archae','astro','capt','hazmat','mech','military','miner','police','secguard','science','blacksuit','whitesuit','tarmac','wall','winter',None]
+all_colors= ('red','blue','green','pink','orange','yellow','grey','white','purple','brown','cyan','lime')
+all_skins= ('archae','astro','capt','hazmat','mech','military','miner','police','secguard','science','blacksuit','whitesuit','tarmac','wall','winter','none')
 
 def generate_base(image="idle.png", color='blue'):
     """
@@ -74,7 +74,7 @@ def crop_and_save(image, name, path='scratch', type='PNG'):
     img.save(os.path.join(path,name), 'PNG')
 
 def generate_crewmate(color='blue', skn=None, ejected=True):
-    skin = Skins(skin=skn) if skn else None
+    skin = Skins(skin=skn) if skn != 'none' else None
     if ejected:
         body = generate_base(image='ejected.png', color=color)
         body_origin = (0, 0)
@@ -122,9 +122,9 @@ def generate_stars(width=2000):
         base.paste(stars2, (x+160-int(x/80), 500-int(x/100)), stars2)
     return base
 
-def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand', name=None, path='scratch/gifs/'):
+def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand', name=None, path='scratch/gifs/', watermark=True):
     if impostor == 'rand':
-        impostor_options = [False, True, None]
+        impostor_options = (False, True, None)
         impostor = impostor_options[random.randrange(0, len(impostor_options))]
     text = person + ' was '
     if impostor == None:
@@ -133,10 +133,10 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
         text += 'not An Impostor.'
     else:
         text += 'An Impostor.'
-    return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=1, path=path, name=name, watermark=True)
+    return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=1, path=path, name=name, watermark=watermark)
 
-def generate_ejection_custom_message(color=None, skn='rand', text="I have been ejected.", path='scratch/gifs/'):
-    return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=1, path=path, name=None, watermark=True)
+def generate_ejection_custom_message(color=None, skn='rand', text="I have been ejected.", path='scratch/gifs/', watermark=True):
+    return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=1, path=path, name=None, watermark=watermark)
 
 
 def generate_ejection_gif(color='blue', skn='rand', hat=None, text="I have been ejected.", add_stars=True, path='scratch/gifs/', name=None, watermark=True):
