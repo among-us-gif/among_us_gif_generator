@@ -1,17 +1,23 @@
 class ReplaceColors:
     red_replace_color = {
-        'red': (198, 17, 17),
-        'blue': (19, 46, 210),
-        'green': (17, 128, 45),
-        'pink': (238, 84, 187),
-        'orange': (240, 125, 13),
-        'yellow': (246, 246, 87),
-        'grey': (63, 71, 78),
-        'white': (215, 225, 241),
-        'purple': (107, 47, 188),
-        'brown': (113, 73, 30),
-        'cyan': (56, 255, 221),
-        'lime': (80, 240, 57)
+        'red': (215, 30, 34),
+        'blue': (29, 60, 233),
+        'green': (27, 145, 62),
+        'pink': (255, 99, 212),
+        'orange': (255, 141, 28),
+        'yellow': (255, 255, 103),
+        'black': (74, 86, 94),
+        'white': (233, 247, 255),
+        'purple': (120, 61, 210),
+        'brown': (128, 88, 45),
+        'cyan': (68, 255, 247),
+        'lime': (91, 255, 75),
+        'maroon': (108, 43, 61),
+        'rose': (255, 214, 236),
+        'banana': (255, 255, 190),
+        'gray': (131, 151, 167),
+        'tan': (159, 153, 137),
+        'coral': (236, 117, 120),
     }
 
     blue_replace_color = {
@@ -21,18 +27,25 @@ class ReplaceColors:
         'pink': (172, 43, 174),
         'orange': (180, 62, 21),
         'yellow': (195, 136, 34),
-        'grey': (30, 31, 38),
+        'black': (30, 31, 38),
         'white': (132, 149, 192),
         'purple': (59, 23, 124),
         'brown': (94, 38, 21),
         'cyan': (36, 169, 191),
-        'lime': (21, 168, 66)
+        'lime': (21, 168, 66),
+        'maroon': (65, 15, 26),
+        'rose': (222, 146, 179),
+        'banana': (210, 188, 137),
+        'gray': (70, 86, 100),
+        'tan': (81, 65, 62),
+        'coral': (180, 67, 98),
     }
 
     def __init__(self, color='blue'):
         self.green = (149, 202, 220)
         self.blue = ReplaceColors.blue_replace_color[color]
         self.red = ReplaceColors.red_replace_color[color]
+
 
 class Skins:
     skin_idle = {
@@ -77,11 +90,11 @@ class Skins:
         'capt': (14, 45),
         'hazmat': (12, 34),
         'mech': (13, 46),
-        'military': (11,45),
+        'military': (11, 45),
         'miner': (13, 40),
         'police': (10, 45),
         'science': (13, 42),
-        'secguard': (14,43),
+        'secguard': (14, 43),
         'blacksuit': (14, 44),
         'whitesuit': (14, 44),
         'tarmac': (14, 40),
@@ -98,7 +111,7 @@ class Skins:
         'military': (12, 35),
         'miner': (12, 36),
         'police': (12, 35),
-        'science': (-10, 35),#need to expand canvas (on both sides)
+        'science': (-10, 35),  # need to expand canvas (on both sides)
         'secguard': (13, 35),
         'blacksuit': (12, 35),
         'whitesuit': (11, 35),

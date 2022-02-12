@@ -1,6 +1,8 @@
 import argparse
 import os
+
 from gifgen import generator
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -17,7 +19,7 @@ def main():
         help='Name of the person or thing being ejected',
     )
     parser.add_argument(
-        "--role", 
+        "--role",
         choices=('impostor', 'crewmate', 'unknown'),
         default='unknown',
         help='Role to be displayed for the ejection.\n'
@@ -58,6 +60,7 @@ def main():
             watermark=False,
         )
     print(f'Generated your gif at {gif_path}')
+
 
 if __name__ == '__main__':
     raise SystemExit(main())

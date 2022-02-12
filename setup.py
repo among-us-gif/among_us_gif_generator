@@ -5,7 +5,7 @@ setup(
     name='among-us-gif-generator',
     version='0.0.1',
     description='Among Us Crewmate and GIF Generator',
-    author='David Dellsperger', 
+    author='David Dellsperger',
     author_email='david.dellsperger@gmail.com',
     long_description='Among Us Crewmate and GIF Generator which has a plethora of cli options to generate gifs and or images for different purposes with among us data',
     url='https://github.com/among-us-gif/among_us_gif_generator',
