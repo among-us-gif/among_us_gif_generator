@@ -53,23 +53,27 @@ all_skins = (
 )
 
 
-def generate_base(image="idle.png", color='blue'):
+def generate_base(
+    image='idle.png',
+    color='blue',
+):
     """
     Generates a base image for an Among Us Asset that needs color replacement.
     The default image is the standing crewmate (idle) and the default color is blue.
 
     :param image: The image to load up
-    :type image: str
     :param color: The color to make the base image, must be one of red, blue, green,
                   pink, orange, yellow, black, white, purple, brown, cyan, lime,
                   maroon, rose, banana, gray, tan, or coral
-    :type color: str
     """
     body = Image.open(os.path.join(ASSET_PATH, image))
     return color_replace(image=body, color=ReplaceColors(color=color))
 
 
-def color_replace(image=None, color=None):
+def color_replace(
+    image=None,
+    color=None,
+):
     if not color:
         color = ReplaceColors()
     im = image.convert('RGBA')
@@ -110,36 +114,46 @@ def color_replace(image=None, color=None):
     return Image.fromarray(pixels)
 
 
-def apply_layer(base_image, layer_image, layer_origin, base_origin=(0, 0)):
+def apply_layer(
+    base_image,
+    layer_image,
+    layer_origin,
+    base_origin=(0, 0),
+):
     base_width, base_height = base_image.size
     layer_width, layer_height = layer_image.size
+
+    # get new image extreme dimensions
     left = layer_origin[0] + base_origin[0]
     left = abs(left) if left < 0 else 0
     top = layer_origin[1] + base_origin[1]
     top = abs(top) if top < 0 else 0
     right = layer_origin[0] + layer_width - base_width
     bottom = layer_origin[1] + layer_height - base_height
+
+    # create new full canvas
     new_image = Image.new(
         base_image.mode, (
             left+right +
             base_width, top+bottom+base_height,
         ), (0, 0, 0, 0),
     )
+
     base_origin = (left, top)
     new_layer_origin = (
         base_origin[0]+layer_origin[0], base_origin[1]+layer_origin[1],
     )
     new_image.paste(base_image, base_origin, base_image)
     new_image.paste(layer_image, new_layer_origin, layer_image)
+
     return new_image, base_origin
 
 
 def crop_and_save(image, name, path='scratch', type='PNG'):
-    if not os.path.exists(path):
-        os.makedirs(path)
+    os.makedirs(path, exist_ok=True)
     img = image.copy()
     img = img.crop(img.getbbox())
-    img.save(os.path.join(path, name), 'PNG')
+    img.save(os.path.join(path, name), type)
 
 
 def generate_crewmate(color='blue', skn=None, ejected=True):
@@ -159,7 +173,7 @@ def generate_crewmate(color='blue', skn=None, ejected=True):
     return body, body_origin
 
 
-def generate_all_images(path='scratch', generate_all=True):
+def generate_all_images(path='scratch', generate_all=True):  # dead: disable
     for color in all_colors:
         crop_and_save(
             generate_base(image='Dead0001.png', color=color),
@@ -203,10 +217,12 @@ def make_square(image):
     size = max(image.size)
     new_image = Image.new(image.mode, (size, size), (0, 0, 0, 0))
     new_image.paste(
-        image, (
+        image,
+        (
             int((size-image.size[0])/2),
             int((size-image.size[1])/2),
-        ), image,
+        ),
+        image,
     )
     return new_image
 
@@ -228,7 +244,15 @@ def generate_stars(width=2000):
     return base
 
 
-def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand', name=None, path='scratch/gifs/', watermark=True):
+def generate_ejection_message(
+    color=None,
+    skn='rand',
+    person='I',
+    impostor='rand',
+    name=None,
+    path='scratch/gifs/',
+    watermark=True,
+):
     if impostor == 'rand':
         impostor_options = (False, True, None)
         impostor = impostor_options[random.randrange(0, len(impostor_options))]
@@ -242,11 +266,26 @@ def generate_ejection_message(color=None, skn='rand', person='I', impostor='rand
     return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=1, path=path, name=name, watermark=watermark)
 
 
-def generate_ejection_custom_message(color=None, skn='rand', text="I have been ejected.", path='scratch/gifs/', watermark=True):
+def generate_ejection_custom_message(
+    color=None,
+    skn='rand',
+    text='I have been ejected.',
+    path='scratch/gifs/',
+    watermark=True,
+):
     return generate_ejection_gif(color=color, skn=skn, hat=None, text=text, add_stars=1, path=path, name=None, watermark=watermark)
 
 
-def generate_ejection_gif(color='blue', skn='rand', hat=None, text="I have been ejected.", add_stars=True, path='scratch/gifs/', name=None, watermark=True):
+def generate_ejection_gif(
+    color='blue',
+    skn='rand',
+    hat=None,
+    text='I have been ejected.',
+    add_stars=True,
+    path='scratch/gifs/',
+    name=None,
+    watermark=True,
+):
     if not color:
         color = all_colors[random.randrange(0, len(all_colors))]
     if skn == 'rand':
@@ -262,13 +301,16 @@ def generate_ejection_gif(color='blue', skn='rand', hat=None, text="I have been 
         name = hasher.hexdigest()[:16]
     if os.path.exists(os.path.join(path, name+'.gif')):
         return name+'.gif'
-    body, body_origin = generate_crewmate(color=color, skn=skn, ejected=True)
+    body, _ = generate_crewmate(color=color, skn=skn, ejected=True)
     body = make_square(body)
 
     font = ImageFont.truetype(os.path.join(ASSET_PATH, 'arial.ttf'), 30)
     text_background = Image.new('RGBA', (4000, 64), (0, 0, 0, 0))
     ImageDraw.Draw(text_background).text(
-        (0, 0), text, font=font, fill=(255, 255, 255, 255),
+        (0, 0),
+        text,
+        font=font,
+        fill=(255, 255, 255, 255),
     )
     text_img = text_background.crop(text_background.getbbox())
     center = (int(body.size[0]/2), int(body.size[1]/2))
@@ -278,13 +320,18 @@ def generate_ejection_gif(color='blue', skn='rand', hat=None, text="I have been 
     )
     watermark_background = Image.new('RGBA', (200, 48), (0, 0, 0, 0))
     ImageDraw.Draw(watermark_background).text(
-        (0, 0), 'Amongusgif.com', font=watermark_font, fill=(40, 40, 40, 255),
+        (0, 0),
+        'Amongusgif.com',
+        font=watermark_font,
+        fill=(40, 40, 40, 255),
     )
     watermark_img = watermark_background.crop(watermark_background.getbbox())
 
     eject_gif = []
     background = Image.new(
-        'RGBA', (max(text_img.size[0]+100, 600), 300), (0, 0, 0, 255),
+        'RGBA',
+        (max(text_img.size[0]+100, 600), 300),
+        (0, 0, 0, 255),
     )
     if add_stars:
         stars = generate_stars(background.size[0]*3)
@@ -340,8 +387,7 @@ def generate_ejection_gif(color='blue', skn='rand', hat=None, text="I have been 
             )
         eject_gif.append(image)
 
-    if not os.path.exists(path):
-        os.makedirs(path)
+    os.makedirs(path, exist_ok=True)
     eject_gif[0].save(
         os.path.join(path, name+'.gif'), save_all=True,
         append_images=eject_gif[1:], duration=40, loop=0,

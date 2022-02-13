@@ -9,7 +9,7 @@ def main():
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
-        "--message",
+        '--message',
         default=None,
         help='Message after ejection.\nNOTE: overrides role option',
     )
@@ -19,7 +19,7 @@ def main():
         help='Name of the person or thing being ejected',
     )
     parser.add_argument(
-        "--role",
+        '--role',
         choices=('impostor', 'crewmate', 'unknown'),
         default='unknown',
         help='Role to be displayed for the ejection.\n'
