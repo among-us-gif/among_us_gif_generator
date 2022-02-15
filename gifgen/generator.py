@@ -76,41 +76,39 @@ def color_replace(
 ):
     if not color:
         color = ReplaceColors()
-    im = image.convert('RGBA')
-    pixels = array(im)
+    pixels = array(image.convert('RGBA'))
     for i in range(image.size[0]):
         for j in range(image.size[1]):
-            pixel = pixels[j][i]
-            if pixel[3] > 0 and not (pixel[0] == pixel[1] and pixel[1] == pixel[2] and pixel[0] == pixel[2]):
-                if sum([1 if (value >= 45 and value <= 65) else 0 for value in pixel[:3]]) < 3:
-                    new_pixel_green = [
-                        int(value * pixel[1] / 255)
-                        for value in color.green
+            red, green, blue, alpha = pixels[j][i].tolist()
+            pixel_sum = sum((red, green, blue))
+            if alpha == 0 or (red == green == blue):
+                continue
+            if sum([(px >= 45 and px <= 65) for px in (red, green, blue)]) < 3:
+                new_px_g = [
+                    int(mask * green / 255)
+                    for mask in color.green
+                ]
+                if green == 0 or (pixel_sum >= 508 and pixel_sum <= 520):
+                    new_px_r = [
+                        int(mask * red / 255)
+                        for mask in color.red
                     ]
-                    if pixel[1] == 0 or (sum(pixel) >= 508 and sum(pixel) <= 520):
-                        new_pixel_red = [
-                            int(value * pixel[0] / 255)
-                            for value in color.red
-                        ]
-                        new_pixel_blue = [
-                            int(value * pixel[2] / 255)
-                            for value in color.blue
-                        ]
-                    elif pixel[0] == pixel[2] and sum(pixel) > 512:
-                        new_pixel_red = new_pixel_blue = [
-                            int(((pixel[0]/255) * (255-value))/2) for value in new_pixel_green
-                        ]
-                    else:
-                        new_pixel_red = [int(pixel[0]/255)]*3
-                        new_pixel_blue = [int(pixel[2]/255)]*3
-                    new_pixel = [
-                        min(
-                            new_pixel_red[i] + new_pixel_green[i] +
-                            new_pixel_blue[i], 255,
-                        ) for i in range(3)
+                    new_px_b = [
+                        int(mask * blue / 255)
+                        for mask in color.blue
                     ]
-                    new_pixel.append(pixel[3])
-                    pixels[j][i] = new_pixel
+                elif red == blue and pixel_sum > 512:
+                    new_px_r = new_px_b = [
+                        int(((red/255) * (255-mask))/2) for mask in new_px_g
+                    ]
+                else:
+                    new_px_r = [int(red/255)]*3
+                    new_px_b = [int(blue/255)]*3
+                new_pixel = [
+                    min(new_px_r[i] + new_px_g[i] + new_px_b[i], 255) for i in range(3)
+                ]
+                new_pixel.append(alpha)
+                pixels[j][i] = new_pixel
     return Image.fromarray(pixels)
 
 
