@@ -1,7 +1,7 @@
 .vscode
 .venv
 scratch
-**/__pycache__
+*.pyc
 build
 dist
 *.egg*

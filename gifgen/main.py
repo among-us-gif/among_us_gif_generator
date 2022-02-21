@@ -10,7 +10,6 @@ def main():
     )
     parser.add_argument(
         '--message',
-        default=None,
         help='Message after ejection.\nNOTE: overrides role option',
     )
     parser.add_argument(
@@ -33,6 +32,7 @@ def main():
     parser.add_argument(
         '--skin',
         choices=generator.all_skins,
+        default='rand',
         help='Crewmate Skin, exclude for a random skin.',
     )
     args = parser.parse_args()
@@ -40,23 +40,24 @@ def main():
     if args.message:
         gif_path = generator.generate_ejection_custom_message(
             color=args.color,
-            skn=args.skin if args.skin else 'rand',
+            skn=args.skin,
             text=args.message,
-            path=os.path.abspath(os.getcwd()),
+            path=os.getcwd(),
             watermark=False,
         )
     else:
-        impostor = None
         if args.role == 'impostor':
             impostor = True
         elif args.role == 'crewmate':
             impostor = False
+        else:
+            impostor = None
         gif_path = generator.generate_ejection_message(
             color=args.color,
-            skn=args.skin if args.skin else 'rand',
+            skn=args.skin,
             person=args.name,
             impostor=impostor,
-            path=os.path.abspath(os.getcwd()),
+            path=os.getcwd(),
             watermark=False,
         )
     print(f'Generated your gif at {gif_path}')

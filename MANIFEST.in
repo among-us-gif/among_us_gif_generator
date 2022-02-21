@@ -1,9 +1,0 @@
-include *.py
-include *.png
-include *.ttf
-
-exclude main.py
-exclude scratch
-global-exclude .git*
-global-exclude *.pyc
-global-exclude *.so

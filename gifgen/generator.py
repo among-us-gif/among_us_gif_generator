@@ -255,9 +255,9 @@ def generate_ejection_message(
         impostor_options = (False, True, None)
         impostor = impostor_options[random.randrange(0, len(impostor_options))]
     text = person + ' was '
-    if impostor == None:
+    if impostor is None:
         text += 'ejected.'
-    elif impostor == False:
+    elif impostor is False:
         text += 'not An Impostor.'
     else:
         text += 'An Impostor.'
