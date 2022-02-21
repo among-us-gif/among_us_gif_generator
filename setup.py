@@ -22,9 +22,7 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
     ],
-    package_dir={'gifgen': 'gifgen'},
     package_data={'gifgen': ['assets/*.png', 'assets/*.ttf']},
-    include_package_data=True,
     python_requires='>=3.8',
     install_requires=[
         'Pillow>=7.0.0',
