@@ -8,7 +8,7 @@ repos:
     -   id: requirements-txt-fixer
     -   id: double-quote-string-fixer
     -   id: check-case-conflict
--   repo: https://github.com/asottile/reorder_python_imports
+-   repo: https://github.com/asottile/reorder-python-imports
     rev: v3.9.0
     hooks:
     -   id: reorder-python-imports
@@ -21,6 +21,6 @@ repos:
     hooks:
     -   id: add-trailing-comma
 -   repo: https://github.com/asottile/dead
-    rev: v1.5.0
+    rev: v1.5.1
     hooks:
     -   id: dead
