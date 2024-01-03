@@ -334,7 +334,9 @@ def generate_ejection_gif(
     if add_stars:
         stars = generate_stars(background.size[0]*3)
         stars1 = stars.resize(
-            (int(stars.size[0]*3.5), int(stars.size[1]*3.5)), Image.ANTIALIAS,
+            (
+                int(stars.size[0]*3.5), int(stars.size[1]*3.5),
+            ), Image.Resampling.LANCZOS,
         )
         stars2 = stars1.copy()
         stars3 = stars1.copy()
