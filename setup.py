@@ -25,7 +25,7 @@ setup(
     package_data={'gifgen': ['assets/*.png', 'assets/*.ttf']},
     python_requires='>=3.8',
     install_requires=[
-        'Pillow>=7.0.0',
+        'Pillow>=10.0.0',
         'numpy',
     ],
 )
